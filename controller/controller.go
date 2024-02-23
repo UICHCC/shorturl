@@ -44,7 +44,8 @@ func Manual(c *fiber.Ctx) error {
 	}
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		err = service.InsertUrl(mr.Short, mr.Origin)
+		longUrl := util.B64Decode(mr.Origin)
+		err = service.InsertUrl(mr.Short, longUrl)
 		if err != nil {
 			log.Println(err)
 			c.Status(http.StatusInternalServerError)
