@@ -15,5 +15,10 @@
     "secret": "10011-ffff-1111"
   },
   "whitelist": [""],
-  "allowOrigins": "https://example.com, https://example.org"
+  "allowOrigins": "https://example.com,https://example.org",
+  "otp": {
+    "email": "example@example.com",
+    "secret": "abcdef"
+  },
+  "disabled": ["404", "static", "manual"]
 }
