@@ -17,7 +17,7 @@ func GetUrl(short string) (string, error) {
 	var u model.ShortUrl
 	result := db.First(&u, "abbreviation = ?", short)
 	if result.Error != nil {
-		return "", err
+		return "", result.Error
 	}
 	return u.Url, nil
 }

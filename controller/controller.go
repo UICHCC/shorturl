@@ -37,6 +37,7 @@ func Manual(c *fiber.Ctx) error {
 	}
 
 	_, err := service.GetUrl(mr.Short)
+	log.Println("Get url:", err)
 	if err == nil {
 		c.Status(http.StatusForbidden)
 		return c.JSON(fiber.Map{"message": "The alias is existed. Please contact administrator."})
@@ -51,7 +52,6 @@ func Manual(c *fiber.Ctx) error {
 		}
 		return c.JSON(fiber.Map{"message": fmt.Sprintf("You have added %v/%v", c.BaseURL(), mr.Short)})
 	}
-	log.Println(err)
 	c.Status(http.StatusInternalServerError)
 	return c.JSON(fiber.Map{"message": "Operation failed."})
 }
