@@ -37,7 +37,9 @@ type CaptchaResponse struct {
 
 // Config 配置文件Struct
 type Config struct {
-	Server   Address  `json:"server"`   // 当前网站的Host和端口
-	Database Database `json:"database"` // 数据库相关配置
-	Captcha  Captcha  `json:"captcha"`  // 是否限制请求域名
+	Server       Address  `json:"server"`       // 当前网站的Host和端口
+	Database     Database `json:"database"`     // 数据库相关配置
+	Captcha      Captcha  `json:"captcha"`      // 是否限制请求域名
+	Whitelist    []string `json:"whitelist"`    // 允许跳过验证的网址
+	AllowOrigins string   `json:"allowOrigins"` // 允许跨域的网站
 }

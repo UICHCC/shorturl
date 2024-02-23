@@ -6,6 +6,7 @@ import (
 	"github.com/DRJ31/shorturl-go/util"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/template/django/v3"
 )
 
@@ -19,12 +20,16 @@ func initRouter(app *fiber.App) {
 
 func main() {
 	engine := django.New("./views", ".html")
+	cf := util.GetConfig()
 	app := fiber.New(fiber.Config{
 		Views: engine,
 	})
 	app.Use(compress.New())
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: cf.AllowOrigins,
+		AllowMethods: "POST,OPTIONS",
+	}))
 	util.InitSnowflake()
 	initRouter(app)
-	cf := util.GetConfig()
 	_ = app.Listen(fmt.Sprintf("%v:%v", cf.Server.Host, cf.Server.Port))
 }

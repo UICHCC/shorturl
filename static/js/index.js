@@ -34,8 +34,10 @@ $(document).ready(function(){
                 if (data.code === 200) {
                     $("#shorturl").val(data.url);
                     $("#btn-copy").attr("disabled", false);
-                }
-                else {
+                } else if (data.Code === 1) {
+                    $("#shorturl").val(data.ShortUrl);
+                    $("#btn-copy").attr("disabled", false);
+                } else {
                     Swal.fire(
                         'Oops',
                         data.Message,

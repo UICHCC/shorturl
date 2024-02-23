@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm"
 	"log"
 	"net/http"
+	"strings"
 )
 
 func Home(c *fiber.Ctx) error {
@@ -20,23 +21,42 @@ func Home(c *fiber.Ctx) error {
 
 func Generate(c *fiber.Ctx) error {
 	var gr model.GenerateReq
+	cfg := util.GetConfig()
 	if err := c.BodyParser(&gr); err != nil {
 		log.Println(err)
 		c.Status(http.StatusBadRequest)
 		return c.JSON(fiber.Map{"message": "Invalid Parameters"})
 	}
 
-	err := util.VerifyCode(gr.Token)
-	if err != nil {
-		log.Println(err)
-		c.Status(http.StatusForbidden)
-		return c.JSON(fiber.Map{"message": "Token is expired"})
+	// 检查长网址
+	longUrl := util.B64Decode(gr.LongUrl)
+	log.Println(longUrl)
+	if len(longUrl) == 0 {
+		c.Status(http.StatusBadRequest)
+		return c.JSON(fiber.Map{"message": "Invalid URL"})
+	}
+
+	// 验证hCaptcha
+	skip := false // 是否跳过验证
+	for _, u := range cfg.Whitelist {
+		if strings.Contains(longUrl, u) {
+			skip = true
+			break
+		}
+	}
+	if !skip {
+		err := util.VerifyCode(gr.Token)
+		if err != nil {
+			log.Println(err)
+			c.Status(http.StatusForbidden)
+			return c.JSON(fiber.Map{"message": "Token is expired"})
+		}
 	}
 
 	var short string
 	for {
 		short = util.NextUrl()
-		err = service.InsertUrl(short, gr.LongUrl)
+		err := service.InsertUrl(short, longUrl)
 		if err != nil && errors.Is(err, gorm.ErrDuplicatedKey) {
 			continue
 		} else if err != nil {
@@ -45,6 +65,13 @@ func Generate(c *fiber.Ctx) error {
 			return c.JSON(fiber.Map{"message": "Failed to generate short url"})
 		}
 		break
+	}
+
+	if skip {
+		return c.JSON(fiber.Map{
+			"Code":     1,
+			"ShortUrl": c.BaseURL() + "/" + short,
+		})
 	}
 
 	return c.JSON(fiber.Map{
