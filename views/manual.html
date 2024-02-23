@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
-    <title>UICHCC Short URL</title>
+    <title>UICHCC Short URL Manual</title>
 
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.1/css/bootstrap.min.css" rel="stylesheet">
@@ -32,39 +32,35 @@
 
     <!-- Custom styles for this template -->
     <link href="/static/css/signin.css" rel="stylesheet">
-    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 </head>
 <script>
     function setBtnStatus() {
+        const matchCode = $("#code").val().match(/[0-9]{6}/);
         const isDisabled1 = !$("#url").val().match("http(s)?://(.+)\.(.{2,})");
-        const isDisabled2 = window.sessionStorage.getItem("res") === null;
-        $("#btn-generate").attr('disabled', isDisabled1 || isDisabled2);
-    }
-
-    function dataCallback(data) {
-        window.sessionStorage.setItem("res", data);
-        setBtnStatus();
+        const isDisabled2 = !matchCode || matchCode[0] !== $("#code").val();
+        const isDisabled3 = $("#shorturl").val().length === 0;
+        $("#btn-save").attr('disabled', isDisabled1 || isDisabled2 || isDisabled3);
     }
 </script>
 <body class="text-center">
 <main class="form-signin">
     <form>
         <img class="mb-4" src="/static/img/uichccblack.svg" alt="" height="57">
-        <h1 class="h3 mb-3 fw-normal">Generate Short URL</h1>
-        <div class="input-group mb-3">
-            <input type="text" id="url" class="form-control" placeholder="e.g. https://example.com"
-                   aria-label="Original URL" aria-describedby="btn-generate">
-            <button class="btn btn-primary" type="button" id="btn-generate" disabled>Generate</button>
+        <h1 class="h3 mb-3 fw-normal">Manual Short URL</h1>
+        <div class="mb-3 text-start">
+            <label for="url" class="form-label">Original URL</label>
+            <input type="text" id="url" class="form-control" placeholder="e.g. https://example.com" required>
+        </div>
+        <div class="mb-3 text-start">
+            <label for="shorturl" class="form-label">Short URL</label>
+            <input type="text" id="shorturl" class="form-control" placeholder="Short URL" required>
+        </div>
+        <div class="mb-3 text-start">
+            <label for="code" class="form-label">Invitation Code</label>
+            <input type="text" id="code" class="form-control" placeholder="Invitation Code" required>
         </div>
         <div class="mb-3">
-            <div class="h-captcha" data-sitekey="{{ siteKey }}" id="captcha" data-callback="dataCallback"></div>
-        </div>
-        <div class="input-group mb-3">
-            <input type="text" id="shorturl" class="form-control" placeholder="Short URL" aria-label="Short URL"
-                   aria-describedby="btn-copy" readonly>
-            <button class="btn btn-secondary" type="button" id="btn-copy" data-clipboard-target="#shorturl" disabled>
-                Copy
-            </button>
+            <button type="submit" class="btn btn-primary form-control" id="btn-save" disabled>Save</button>
         </div>
         <br/>
         <p class="mt-5 mb-3 text-muted">&copy; <span id="year"></span> UICHCC. All rights reserved.</p>
@@ -76,5 +72,5 @@
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.11/clipboard.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/limonte-sweetalert2/11.7.27/sweetalert2.all.min.js"></script>
-<script src="/static/js/index.js"></script>
+<script src="/static/js/manual.js"></script>
 </html>

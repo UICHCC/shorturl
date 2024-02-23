@@ -3,15 +3,16 @@ package service
 import (
 	"errors"
 	"github.com/DRJ31/shorturl-go/model"
+	"github.com/DRJ31/shorturl-go/util"
 	"gorm.io/gorm"
 )
 
 func GetUrl(short string) (string, error) {
-	db, err := model.Init()
+	db, err := util.InitDB()
 	if err != nil {
 		return "", err
 	}
-	defer model.Close(db)
+	defer util.CloseDB(db)
 
 	var u model.ShortUrl
 	result := db.First(&u, "abbreviation = ?", short)
@@ -22,11 +23,11 @@ func GetUrl(short string) (string, error) {
 }
 
 func InsertUrl(short, url string) error {
-	db, err := model.Init()
+	db, err := util.InitDB()
 	if err != nil {
 		return err
 	}
-	defer model.Close(db)
+	defer util.CloseDB(db)
 
 	var uCheck, uInsert model.ShortUrl
 	result := db.First(&uCheck, "abbreviation = ?", short)

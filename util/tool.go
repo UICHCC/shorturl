@@ -2,18 +2,12 @@ package util
 
 import (
 	"encoding/base64"
-	"github.com/bwmarrin/snowflake"
 	"github.com/gofiber/fiber/v2"
+	"github.com/pquerna/otp/totp"
 )
 
-var node *snowflake.Node
-
-func InitSnowflake() {
-	node, _ = snowflake.NewNode(1)
-}
-
 func NextUrl() string {
-	id := node.Generate()
+	id := snowFlakeNode.Generate()
 	return id.Base58()
 }
 
@@ -27,4 +21,8 @@ func B64Decode(b64Str string) string {
 
 func GetIP(c *fiber.Ctx) string {
 	return string(c.Request().Header.Peek("X-Real-IP"))
+}
+
+func ValidateTotp(code string) bool {
+	return totp.Validate(code, cfg.Otp.Secret)
 }

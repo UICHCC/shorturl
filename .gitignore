@@ -5,3 +5,5 @@
 shorturl-go
 .DS_Store
 *.tar*
+*_test.go
+config.json
