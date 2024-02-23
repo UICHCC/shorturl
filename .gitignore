@@ -1,0 +1,7 @@
+# Folders
+.idea/
+
+# Files
+shorturl-go
+.DS_Store
+*.tar*

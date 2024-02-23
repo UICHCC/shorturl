@@ -1,0 +1,17 @@
+{
+  "server": {
+    "host": "0.0.0.0",
+    "port": 3000
+  },
+  "database": {
+    "host": "172.17.0.1",
+    "port": 3306,
+    "username": "demonist",
+    "password": "008691",
+    "name": "demonist"
+  },
+  "captcha": {
+    "key": "23a016a7-2ec7-4e31-8214-04073e5f4a02",
+    "secret": "ES_b28461d4d0684d3197c6f5ce79e96f94"
+  }
+}

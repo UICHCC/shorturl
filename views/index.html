@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>UICHCC Short URL</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/limonte-sweetalert2/11.7.27/sweetalert2.min.css">
+    <!-- Favicons -->
+    <link rel="icon" href="/static/img/favicon.ico">
+    <meta name="theme-color" content="#7952b3">
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+
+
+    <!-- Custom styles for this template -->
+    <link href="/static/css/signin.css" rel="stylesheet">
+    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+</head>
+<script>
+    function setBtnStatus() {
+        const isEnabled1 = !$("#url").val().match("http(s)?://(.+)\.(.{2,})");
+        const isEnabled2 = window.sessionStorage.getItem("res") === null;
+        $("#btn-generate").attr('disabled', isEnabled1 || isEnabled2);
+    }
+
+    function dataCallback(data) {
+        window.sessionStorage.setItem("res", data);
+        setBtnStatus();
+    }
+</script>
+<body class="text-center">
+<main class="form-signin">
+    <form>
+        <img class="mb-4" src="/static/img/uichccblack.svg" alt="" height="57">
+        <h1 class="h3 mb-3 fw-normal">Generate Short URL</h1>
+        <div class="input-group mb-3">
+            <input type="text" id="url" class="form-control" placeholder="e.g. https://example.com"
+                   aria-label="Original URL" aria-describedby="btn-generate">
+            <button class="btn btn-primary" type="button" id="btn-generate" disabled>Generate</button>
+        </div>
+        <div class="mb-3">
+            <div class="h-captcha" data-sitekey="{{ siteKey }}" id="captcha" data-callback="dataCallback"></div>
+        </div>
+        <div class="input-group mb-3">
+            <input type="text" id="shorturl" class="form-control" placeholder="Short URL" aria-label="Short URL"
+                   aria-describedby="btn-copy" readonly>
+            <button class="btn btn-secondary" type="button" id="btn-copy" data-clipboard-target="#shorturl" disabled>
+                Copy
+            </button>
+        </div>
+        <br/>
+        <p class="mt-5 mb-3 text-muted">&copy; <span id="year"></span> UICHCC. All rights reserved.</p>
+    </form>
+</main>
+
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.11/clipboard.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/limonte-sweetalert2/11.7.27/sweetalert2.all.min.js"></script>
+<script src="/static/js/index.js"></script>
+</html>

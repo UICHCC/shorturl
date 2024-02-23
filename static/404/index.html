@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en" class="h-100">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>404 Not Found</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- Favicons -->
+    <link rel="icon" href="/img/favicon.ico">
+    <meta name="theme-color" content="#7952b3">
+
+
+    <style>
+      body {
+          height: 100%;
+          background-color: #333;
+          background-size: cover;
+      }
+
+
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .page-wrapper {
+          background-color: rgba(0, 0, 0, 0.5);
+          height: 100%;
+          width: 100%;
+      }
+    </style>
+
+    
+    <!-- Custom styles for this template -->
+    <link href="/static/css/cover.css" rel="stylesheet">
+  </head>
+  <body class="d-flex h-100 text-center text-white bg-dark">
+    
+    <div class="page-wrapper">
+      <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <header class="mb-auto">
+          <div>
+            <h3 class="float-md-start mb-0">404 Not Found</h3>
+            <nav class="nav nav-masthead justify-content-center float-md-end">
+              <a class="nav-link" href="/">ShortURL</a>
+              <a class="nav-link" href="https://uichcc.com">HCC Home</a>
+              <a class="nav-link" href="https://uichcc.com/projects/">HCC Projects</a>
+            </nav>
+          </div>
+        </header>
+      
+        <main class="px-3">
+          <h1>Short URL Not Found</h1>
+          <p class="lead">The short URL you request does not exist.</p>
+          <p class="lead" style="line-height: 50px;">
+            <a href="/gpacal" class="btn btn btn-secondary fw-bold border-white bg-white">GPA Calculator</a>
+            <a href="/headphoto" class="btn btn btn-secondary fw-bold border-white bg-white">Headphoto Synthesizer</a>
+            <a href="/names" class="btn btn btn-secondary fw-bold border-white bg-white">UIC Name Query</a>
+            <a href="/course" class="btn btn btn-secondary fw-bold border-white bg-white">UIC Course</a>
+            <a href="/lc3" class="btn btn btn-secondary fw-bold border-white bg-white">LC3 Emulator</a>
+          </p>
+        </main>
+      
+        <footer class="mt-auto text-white-50">
+          <p>&copy;UICHCC 2016–<span id="year"></span></p>
+        </footer>
+      </div>
+    </div>
+    
+  </body>
+  <script>
+    $(document).ready(function(){
+        $("#year").html(new Date().getFullYear());
+
+        $.get("https://api.drjchn.com/api/wallpaper/url", (data) => {
+          $("body").css("background-image", `url('${data}')`);
+        })
+    })
+  </script>
+</html>
