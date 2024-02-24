@@ -10,7 +10,7 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- Favicons -->
-    <link rel="icon" href="/img/favicon.ico">
+    <link rel="icon" href="/static/img/favicon.ico">
     <meta name="theme-color" content="#7952b3">
 
 
@@ -55,9 +55,9 @@
           <div>
             <h3 class="float-md-start mb-0">404 Not Found</h3>
             <nav class="nav nav-masthead justify-content-center float-md-end">
-              <a class="nav-link" href="/">ShortURL</a>
-              <a class="nav-link" href="https://uichcc.com">HCC Home</a>
-              <a class="nav-link" href="https://uichcc.com/projects/">HCC Projects</a>
+              {% for header in headers %}
+              <a class="nav-link" href="{{ header.Url }}">{{ header.Name }}</a>
+              {% endfor %}
             </nav>
           </div>
         </header>
@@ -66,11 +66,9 @@
           <h1>Short URL Not Found</h1>
           <p class="lead">The short URL you request does not exist.</p>
           <p class="lead" style="line-height: 50px;">
-            <a href="/gpacal" class="btn btn btn-secondary fw-bold border-white bg-white">GPA Calculator</a>
-            <a href="/headphoto" class="btn btn btn-secondary fw-bold border-white bg-white">Headphoto Synthesizer</a>
-            <a href="/names" class="btn btn btn-secondary fw-bold border-white bg-white">UIC Name Query</a>
-            <a href="/course" class="btn btn btn-secondary fw-bold border-white bg-white">UIC Course</a>
-            <a href="/lc3" class="btn btn btn-secondary fw-bold border-white bg-white">LC3 Emulator</a>
+            {% for menu in menus %}
+            <a href="{{ menu.Url }}" class="btn btn btn-secondary fw-bold border-white bg-white">{{ menu.Name }}</a>
+            {% endfor %}
           </p>
         </main>
       

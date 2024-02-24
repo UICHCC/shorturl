@@ -2,15 +2,25 @@ package util
 
 import (
 	"encoding/base64"
+	"github.com/bwmarrin/snowflake"
 	"github.com/gofiber/fiber/v2"
-	"github.com/pquerna/otp/totp"
+	"regexp"
 )
 
+var snowFlakeNode *snowflake.Node
+
+// InitSnowflake Initialize snowflake node
+func InitSnowflake() {
+	snowFlakeNode, _ = snowflake.NewNode(1)
+}
+
+// NextUrl Next short url
 func NextUrl() string {
 	id := snowFlakeNode.Generate()
 	return id.Base58()
 }
 
+// B64Decode Decode base64 string
 func B64Decode(b64Str string) string {
 	result, err := base64.StdEncoding.DecodeString(b64Str)
 	if err != nil {
@@ -19,10 +29,14 @@ func B64Decode(b64Str string) string {
 	return string(result)
 }
 
+// GetIP Get IP address from X-Real-IP header
 func GetIP(c *fiber.Ctx) string {
 	return string(c.Request().Header.Peek("X-Real-IP"))
 }
 
-func ValidateTotp(code string) bool {
-	return totp.Validate(code, cfg.Otp.Secret)
+// CheckAlias Check if the short url is valid
+func CheckAlias(short string) bool {
+	reg := regexp.MustCompile("[0-9a-z]{1,10}")
+	s := reg.FindString(short)
+	return s == short
 }

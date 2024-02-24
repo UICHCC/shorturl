@@ -3,16 +3,17 @@
  * @description: 配置文件相关
  */
 
-package util
+package service
 
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/bwmarrin/snowflake"
+	"github.com/DRJ31/shorturl-go/util"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/template/django/v3"
+	"github.com/redis/go-redis/v9"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"log"
@@ -22,14 +23,13 @@ import (
 
 var cfg *Config
 var once sync.Once
-var snowFlakeNode *snowflake.Node
 
 func (addr Address) String() string {
 	return fmt.Sprintf("%s:%d", addr.Host, addr.Port)
 }
 
 // InitConfig Initialize configuration file
-func InitConfig() {
+func initConfig() {
 	once.Do(func() {
 		cfg = &Config{}
 		jsonFile, err := os.Open("config.json")
@@ -46,7 +46,7 @@ func InitConfig() {
 }
 
 // InitDB Initialize database connection
-func InitDB() (*gorm.DB, error) {
+func initDB() (*gorm.DB, error) {
 	formatStr := "%v:%v@tcp(%v:%v)/%v?charset=utf8mb4&parseTime=True&loc=Local"
 	db := cfg.Database
 	dsn := fmt.Sprintf(formatStr, db.Username, db.Password, db.Host, db.Port, db.Name)
@@ -58,7 +58,7 @@ func InitDB() (*gorm.DB, error) {
 }
 
 // CloseDB Close database connection
-func CloseDB(db *gorm.DB) error {
+func closeDB(db *gorm.DB) error {
 	sqlDB, err := db.DB()
 	if err != nil {
 		return err
@@ -67,14 +67,18 @@ func CloseDB(db *gorm.DB) error {
 	return sqlDB.Close()
 }
 
-// InitSnowflake Initialize snowflake node
-func InitSnowflake() {
-	snowFlakeNode, _ = snowflake.NewNode(1)
+// InitRedis Initialize redis connection
+func initRedis() {
+	rdb = redis.NewClient(&redis.Options{
+		Addr:     cfg.Redis.String(),
+		Password: "", // no password set
+		DB:       0,  // use default DB
+	})
 }
 
 // InitApp Initialize application
 func InitApp() *fiber.App {
-	InitConfig()
+	initConfig()
 	engine := django.New("./views", ".html")
 	app := fiber.New(fiber.Config{
 		Views: engine,
@@ -84,6 +88,7 @@ func InitApp() *fiber.App {
 		AllowOrigins: cfg.AllowOrigins,
 		AllowMethods: "POST,OPTIONS",
 	}))
-	InitSnowflake()
+	util.InitSnowflake()
+	initRedis()
 	return app
 }

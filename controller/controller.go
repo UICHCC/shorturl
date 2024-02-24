@@ -15,7 +15,7 @@ import (
 
 func HomePage(c *fiber.Ctx) error {
 	return c.Render("index", fiber.Map{
-		"siteKey": util.GetCaptchaInfo().Key,
+		"siteKey": service.GetCaptchaInfo().Key,
 	})
 }
 
@@ -31,9 +31,14 @@ func Manual(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"message": "Invalid Parameters"})
 	}
 
-	if !util.ValidateTotp(mr.Code) {
+	if !service.ValidateTotp(mr.Code) {
 		c.Status(http.StatusForbidden)
 		return c.JSON(fiber.Map{"message": "Invalid Code"})
+	}
+
+	if !util.CheckAlias(mr.Short) {
+		c.Status(http.StatusBadRequest)
+		return c.JSON(fiber.Map{"message": "Invalid short url!"})
 	}
 
 	_, err := service.GetUrl(mr.Short)
@@ -45,7 +50,7 @@ func Manual(c *fiber.Ctx) error {
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		longUrl := util.B64Decode(mr.Origin)
-		err = service.InsertUrl(mr.Short, longUrl)
+		err = service.InsertUrl(mr.Short, longUrl, true)
 		if err != nil {
 			log.Println(err)
 			c.Status(http.StatusInternalServerError)
@@ -75,7 +80,7 @@ func Generate(c *fiber.Ctx) error {
 
 	// 验证hCaptcha
 	skip := false // 是否跳过验证
-	whitelist := util.GetWhitelist()
+	whitelist := service.GetWhitelist()
 	for _, u := range whitelist {
 		if strings.Contains(longUrl, u) {
 			skip = true
@@ -83,7 +88,7 @@ func Generate(c *fiber.Ctx) error {
 		}
 	}
 	if !skip {
-		err := util.VerifyCode(gr.Token)
+		err := service.VerifyCode(gr.Token)
 		if err != nil {
 			log.Println(err)
 			c.Status(http.StatusForbidden)
@@ -94,7 +99,7 @@ func Generate(c *fiber.Ctx) error {
 	var short string
 	for {
 		short = util.NextUrl()
-		err := service.InsertUrl(short, longUrl)
+		err := service.InsertUrl(short, longUrl, false)
 		if err != nil && errors.Is(err, gorm.ErrDuplicatedKey) {
 			continue
 		} else if err != nil {
@@ -126,4 +131,23 @@ func Redirect(c *fiber.Ctx) error {
 		return c.Redirect("/404")
 	}
 	return c.Redirect(url)
+}
+
+func PageNotFound(c *fiber.Ctx) error {
+	var headerMenu, menu []model.Menu
+	var err error
+	headerMenu, err = service.GetMenu(true)
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return c.JSON(fiber.Map{"message": "Failed to get header menu."})
+	}
+	menu, err = service.GetMenu(false)
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return c.JSON(fiber.Map{"message": "Failed to get menu."})
+	}
+	return c.Render("404", fiber.Map{
+		"headers": headerMenu,
+		"menus":   menu,
+	})
 }

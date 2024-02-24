@@ -3,7 +3,7 @@
  * @description: util相关数据结构
  */
 
-package util
+package service
 
 import (
 	"time"
@@ -50,5 +50,5 @@ type Config struct {
 	Whitelist    []string `json:"whitelist"`    // Urls that do not need to verify
 	AllowOrigins string   `json:"allowOrigins"` // Cross origin
 	Otp          OTP      `json:"otp"`          // Information on otp settings
-	Disabled     []string `json:"disabled"`     // Blacklist of manual short url
+	Redis        Address  `json:"redis"`        // Host and port of redis server
 }

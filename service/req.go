@@ -1,13 +1,15 @@
-package util
+package service
 
 import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/pquerna/otp/totp"
 	"net/http"
 	"strings"
 )
 
+// VerifyCode Verify hCaptcha status
 func VerifyCode(token string) error {
 	url := "https://api.hcaptcha.com/siteverify"
 	data := fmt.Sprintf("secret=%v&response=%v", cfg.Captcha.Secret, token)
@@ -26,4 +28,9 @@ func VerifyCode(token string) error {
 		return errors.New("verify failed")
 	}
 	return nil
+}
+
+// ValidateTotp Totp validation
+func ValidateTotp(code string) bool {
+	return totp.Validate(code, cfg.Otp.Secret)
 }

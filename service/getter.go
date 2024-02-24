@@ -1,4 +1,4 @@
-package util
+package service
 
 func GetCaptchaInfo() Captcha {
 	return cfg.Captcha
