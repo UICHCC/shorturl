@@ -23,6 +23,9 @@ func GetUrl(short string) (string, error) {
 	var u model.ShortUrl
 	result := db.First(&u, "abbreviation = ?", short)
 	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			_ = SetKey(SHORT_PREFIX+short, "invalid", LONG_EXPIRE)
+		}
 		return "", result.Error
 	}
 

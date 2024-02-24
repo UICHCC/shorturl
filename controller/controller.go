@@ -126,7 +126,7 @@ func Generate(c *fiber.Ctx) error {
 func Redirect(c *fiber.Ctx) error {
 	short := c.Params("short")
 	url, err := service.GetUrl(short)
-	if err != nil {
+	if err != nil || url == "invalid" {
 		log.Println(err)
 		return c.Redirect("/404")
 	}
