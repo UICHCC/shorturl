@@ -13,5 +13,5 @@ func GetServerInfo() Address {
 }
 
 func GetBlacklist() []string {
-	return cfg.BlackList
+	return cfg.Blacklist
 }

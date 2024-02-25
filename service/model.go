@@ -51,5 +51,5 @@ type Config struct {
 	AllowOrigins string   `json:"allowOrigins"` // Cross origin
 	Otp          OTP      `json:"otp"`          // Information on otp settings
 	Redis        Address  `json:"redis"`        // Host and port of redis server
-	BlackList    []string `json:"blackList"`    // Rules on filtering urls
+	Blacklist    []string `json:"blacklist"`    // Rules on filtering urls
 }
