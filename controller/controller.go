@@ -11,16 +11,20 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 )
 
 func HomePage(c *fiber.Ctx) error {
 	return c.Render("index", fiber.Map{
 		"siteKey": service.GetCaptchaInfo().Key,
+		"year":    time.Now().Year(),
 	})
 }
 
 func ManualPage(c *fiber.Ctx) error {
-	return c.Render("manual", fiber.Map{})
+	return c.Render("manual", fiber.Map{
+		"year": time.Now().Year(),
+	})
 }
 
 func Manual(c *fiber.Ctx) error {
@@ -156,5 +160,7 @@ func PageNotFound(c *fiber.Ctx) error {
 	return c.Render("404", fiber.Map{
 		"headers": headerMenu,
 		"menus":   menu,
+		"year":    time.Now().Year(),
+		"img":     service.GetWallpaperUrl(),
 	})
 }

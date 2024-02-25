@@ -1,6 +1,4 @@
 $(document).ready(function(){
-    $("#year").html(new Date().getFullYear());
-
     $("#url").on('input', setBtnStatus);
     $("#code").on('input', setBtnStatus);
     $("#shorturl").on('input', setBtnStatus);

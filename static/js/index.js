@@ -5,8 +5,6 @@ $(document).ready(function(){
     });
     window.sessionStorage.removeItem("res");
 
-    $("#year").html(new Date().getFullYear());
-
     $("#url").on('input', setBtnStatus);
 
     $("#btn-generate").on('click', () => {

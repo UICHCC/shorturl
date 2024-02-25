@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/pquerna/otp/totp"
+	"io"
 	"net/http"
 	"strings"
 )
@@ -28,6 +29,23 @@ func VerifyCode(token string) error {
 		return errors.New("verify failed")
 	}
 	return nil
+}
+
+// GetWallpaperUrl Get Url for microsoft wallpaper
+func GetWallpaperUrl() string {
+	const UNSPLASH_URL = "https://source.unsplash.com/random"
+	url := "https://api.drjchn.com/api/wallpaper/url"
+	res, err := http.Get(url)
+	if err != nil {
+		return UNSPLASH_URL
+	}
+
+	defer res.Body.Close()
+	resultByte, err := io.ReadAll(res.Body)
+	if err != nil {
+		return UNSPLASH_URL
+	}
+	return string(resultByte)
 }
 
 // ValidateTotp Totp validation
