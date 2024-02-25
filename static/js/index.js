@@ -44,6 +44,13 @@ $(document).ready(function(){
                         'error'
                     );
                 }
+            },
+            error: function (err) {
+                Swal.fire(
+                    'Oops',
+                    err.responseJSON.message,
+                    'error'
+                );
             }
         });
     });
