@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"github.com/bwmarrin/snowflake"
 	"github.com/gofiber/fiber/v2"
+	"log"
 	"regexp"
 )
 
@@ -39,4 +40,18 @@ func CheckAlias(short string) bool {
 	reg := regexp.MustCompile("[0-9a-z]{1,10}")
 	s := reg.FindString(short)
 	return s == short
+}
+
+// CheckUrl Check if the url is valid
+func CheckUrl(url string, patterns []string) bool {
+	valid := true
+	for _, pat := range patterns {
+		reg := regexp.MustCompile(pat)
+		if reg.MatchString(url) {
+			log.Println(reg.FindString(url))
+			valid = false
+			return valid
+		}
+	}
+	return valid
 }
