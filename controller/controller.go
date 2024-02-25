@@ -74,8 +74,15 @@ func Generate(c *fiber.Ctx) error {
 	longUrl := util.B64Decode(gr.LongUrl)
 	log.Println(longUrl)
 	if len(longUrl) == 0 {
-		c.Status(http.StatusBadRequest)
+		c.Status(http.StatusInternalServerError)
 		return c.JSON(fiber.Map{"message": "Invalid URL"})
+	}
+	blackList := service.GetBlacklist()
+	for _, pat := range blackList {
+		if strings.Contains(longUrl, pat) {
+			c.Status(http.StatusInternalServerError)
+			return c.JSON(fiber.Map{"message": "Invalid URL"})
+		}
 	}
 
 	// 验证hCaptcha

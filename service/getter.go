@@ -11,3 +11,7 @@ func GetWhitelist() []string {
 func GetServerInfo() Address {
 	return cfg.Server
 }
+
+func GetBlacklist() []string {
+	return cfg.BlackList
+}
