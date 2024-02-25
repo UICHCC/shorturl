@@ -15,12 +15,6 @@ docker pull dengrenjie31/shorturl
 
 
 #### Deployment
-The default configuration file is `etc/config.json`. If your configuration is exactly the same as it, you can run the application as below:
-```shell
-docker run --name shorturl --restart always -p 3000:3000 -d dengrenjie31/shorturl
-```
-
-If you want to modify the configuration file, edit the file, put it in a certain path and run the application as below:
 ```shell
 docker run --name shorturl --restart always -p 3000:3000 -v /path/to/config.json:/app/config.json -d dengrenjie31/shorturl
 ```
