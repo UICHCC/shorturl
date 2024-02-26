@@ -15,6 +15,7 @@ const (
 	SHORT_PREFIX    = "alias_"
 	HEADER_MENU_KEY = "header_menu_key"
 	MENU_KEY        = "menu_key"
+	BLACKLIST_KEY   = "blacklist"
 )
 
 func SetKey(k string, v interface{}, expire time.Duration) error {

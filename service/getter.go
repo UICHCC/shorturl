@@ -12,6 +12,6 @@ func GetServerInfo() Address {
 	return cfg.Server
 }
 
-func GetBlacklist() []string {
-	return cfg.Blacklist
+func GetOtpInfo() OTP {
+	return cfg.Otp
 }

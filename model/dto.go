@@ -1,11 +1,11 @@
 package model
 
-type GenerateReq struct {
+type GenerateDto struct {
 	LongUrl string `json:"longUrl"`
 	Token   string `json:"token"`
 }
 
-type ManualReq struct {
+type ManualDto struct {
 	Short  string `json:"short"`
 	Origin string `json:"origin"`
 	Code   string `json:"code"`

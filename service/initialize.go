@@ -8,7 +8,6 @@ package service
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/DRJ31/shorturl-go/util"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -88,7 +87,6 @@ func InitApp() *fiber.App {
 		AllowOrigins: cfg.AllowOrigins,
 		AllowMethods: "POST,OPTIONS",
 	}))
-	util.InitSnowflake()
 	initRedis()
 	return app
 }

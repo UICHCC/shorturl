@@ -28,14 +28,14 @@ func ManualPage(c *fiber.Ctx) error {
 }
 
 func Manual(c *fiber.Ctx) error {
-	var mr model.ManualReq
+	var mr model.ManualDto
 	if err := c.BodyParser(&mr); err != nil {
 		log.Println(err)
 		c.Status(http.StatusBadRequest)
 		return c.JSON(fiber.Map{"message": "Invalid Parameters"})
 	}
 
-	if !service.ValidateTotp(mr.Code) {
+	if !util.ValidateTotp(mr.Code) {
 		c.Status(http.StatusForbidden)
 		return c.JSON(fiber.Map{"message": "Invalid Code"})
 	}
@@ -67,7 +67,7 @@ func Manual(c *fiber.Ctx) error {
 }
 
 func Generate(c *fiber.Ctx) error {
-	var gr model.GenerateReq
+	var gr model.GenerateDto
 	if err := c.BodyParser(&gr); err != nil {
 		log.Println(err)
 		c.Status(http.StatusBadRequest)
@@ -81,10 +81,9 @@ func Generate(c *fiber.Ctx) error {
 		c.Status(http.StatusInternalServerError)
 		return c.JSON(fiber.Map{"message": "Invalid URL"})
 	}
-	blackList := service.GetBlacklist()
-	if !util.CheckUrl(longUrl, blackList) {
+	if !util.ValidateUrl(longUrl) {
 		c.Status(http.StatusInternalServerError)
-		return c.JSON(fiber.Map{"message": "Invalid URL"})
+		return c.JSON(fiber.Map{"message": "Failed to pass URL check."})
 	}
 
 	// 验证hCaptcha
@@ -97,7 +96,7 @@ func Generate(c *fiber.Ctx) error {
 		}
 	}
 	if !skip {
-		err := service.VerifyCode(gr.Token)
+		err := util.VerifyCode(gr.Token)
 		if err != nil {
 			log.Println(err)
 			c.Status(http.StatusForbidden)
@@ -159,6 +158,6 @@ func PageNotFound(c *fiber.Ctx) error {
 		"headers": headerMenu,
 		"menus":   menu,
 		"year":    time.Now().Year(),
-		"img":     service.GetWallpaperUrl(),
+		"img":     util.GetWallpaperUrl(),
 	})
 }

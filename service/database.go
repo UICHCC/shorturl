@@ -64,7 +64,7 @@ func InsertUrl(short, url string, manual bool) error {
 			expire = LONG_EXPIRE
 		}
 		err = SetKey(SHORT_PREFIX+short, url, expire)
-		return result.Error
+		return err
 	}
 	return result.Error
 }
@@ -78,7 +78,7 @@ func GetMenu(isHeader bool) ([]model.Menu, error) {
 		k = MENU_KEY
 	}
 	menuBytes, err := GetKey(k).Bytes()
-	if err != nil {
+	if err == nil {
 		err = json.Unmarshal(menuBytes, &menuList)
 		if err == nil {
 			return menuList, nil
@@ -100,4 +100,55 @@ func GetMenu(isHeader bool) ([]model.Menu, error) {
 		_ = SetKey(k, menuBytes, SHORT_EXPIRE)
 	}
 	return menuList, nil
+}
+
+func GetBlacklist() ([]model.Blacklist, error) {
+	var blacklist []model.Blacklist
+	blacklistBytes, err := GetKey(BLACKLIST_KEY).Bytes()
+	if err == nil {
+		err = json.Unmarshal(blacklistBytes, &blacklist)
+		if err == nil {
+			return blacklist, nil
+		}
+	}
+
+	db, err := initDB()
+	if err != nil {
+		return nil, err
+	}
+	defer closeDB(db)
+
+	result := db.Find(&blacklist)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	blacklistBytes, err = json.Marshal(blacklist)
+	if err == nil {
+		_ = SetKey(BLACKLIST_KEY, blacklistBytes, LONG_EXPIRE)
+	}
+	return blacklist, nil
+}
+
+func InsertBlacklistRecord(pattern string, manual bool) error {
+	db, err := initDB()
+	if err != nil {
+		return err
+	}
+	defer closeDB(db)
+
+	var bCheck, bInsert model.Blacklist
+	result := db.First(&bCheck, "pattern = ?", pattern)
+	if result.Error == nil {
+		return nil
+	} else if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		bInsert.Pattern = pattern
+		bInsert.Manual = manual
+		result = db.Create(&bInsert)
+		if result.Error != nil {
+			return result.Error
+		}
+		_, err = GetBlacklist()
+		return err
+	}
+	return result.Error
 }

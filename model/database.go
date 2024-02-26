@@ -1,6 +1,7 @@
 package model
 
 import (
+	"gorm.io/gorm"
 	"time"
 )
 
@@ -19,10 +20,20 @@ type Menu struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
+type Blacklist struct {
+	gorm.Model
+	Pattern string `json:"pattern"`
+	Manual  bool   `json:"manual"`
+}
+
 func (ShortUrl) TableName() string {
 	return "shorturl"
 }
 
 func (Menu) TableName() string {
 	return "menu"
+}
+
+func (Blacklist) TableName() string {
+	return "blacklist"
 }
