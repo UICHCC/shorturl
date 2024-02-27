@@ -54,6 +54,7 @@ func InsertUrl(short, url string, manual bool) error {
 	} else if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		uInsert.Abbreviation = short
 		uInsert.Url = url
+		uInsert.Manual = manual
 		result = db.Create(&uInsert)
 		if result.Error != nil {
 			return result.Error
