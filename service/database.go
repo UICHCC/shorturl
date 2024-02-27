@@ -125,7 +125,7 @@ func GetBlacklist() ([]model.Blacklist, error) {
 	}
 	blacklistBytes, err = json.Marshal(blacklist)
 	if err == nil {
-		_ = SetKey(BLACKLIST_KEY, blacklistBytes, LONG_EXPIRE)
+		_ = SetKey(BLACKLIST_KEY, blacklistBytes, SHORT_EXPIRE)
 	}
 	return blacklist, nil
 }
