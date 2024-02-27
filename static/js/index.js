@@ -4,10 +4,16 @@ $(document).ready(function(){
         Swal.fire('Copied!', 'URL has copied.', 'success');
     });
     window.sessionStorage.removeItem("res");
+    let reload = false;
 
     $("#url").on('input', setBtnStatus);
 
     $("#btn-generate").on('click', () => {
+        if (reload) {
+            reload = false;
+            window.location.reload();
+            return;
+        }
         if (!$("#url").val().match("http(s)?://(.+)\.(.{2,})")) {
             Swal.fire(
                 'Oops',
@@ -22,6 +28,8 @@ $(document).ready(function(){
         formData.append('longUrl', btoa($("#url").val()));
         formData.append('token', res);
         window.sessionStorage.removeItem("res");
+        $("#btn-loading").css("display", "inline-grid");
+        $("#btn-generate").attr("disabled", true);
         $.ajax({
             url : "/short",
             type: "POST",
@@ -29,6 +37,9 @@ $(document).ready(function(){
             processData: false,
             contentType: false,
             success:function(data){
+                reload = true;
+                $("#btn-generate").html("Reload").attr("disabled", false);
+                $("#btn-loading").css("display", "none");
                 if (data.code === 200) {
                     $("#shorturl").val(data.url);
                     $("#btn-copy").attr("disabled", false);

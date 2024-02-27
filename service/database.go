@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/DRJ31/shorturl-go/model"
 	"gorm.io/gorm"
+	"regexp"
 	"time"
 )
 
@@ -130,6 +131,11 @@ func GetBlacklist() ([]model.Blacklist, error) {
 }
 
 func InsertBlacklistRecord(pattern string, manual bool) error {
+	urlReg := regexp.MustCompile("://[-a-zA-Z0-9.]+/")
+	if !urlReg.MatchString(pattern) {
+		return nil
+	}
+
 	db, err := initDB()
 	if err != nil {
 		return err
@@ -141,7 +147,7 @@ func InsertBlacklistRecord(pattern string, manual bool) error {
 	if result.Error == nil {
 		return nil
 	} else if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		bInsert.Pattern = pattern
+		bInsert.Pattern = pattern[:len(pattern)-1]
 		bInsert.Manual = manual
 		result = db.Create(&bInsert)
 		if result.Error != nil {

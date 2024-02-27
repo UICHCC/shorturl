@@ -66,7 +66,7 @@ func ValidateUrl(url string) bool {
 	for _, record := range blacklist {
 		reg := regexp.MustCompile(record.Pattern)
 		if reg.MatchString(url) {
-			log.Println(reg.FindString(url))
+			log.Println(reg.FindString(url), record.Pattern)
 			valid = false
 			return valid
 		}
@@ -80,16 +80,8 @@ func ValidateUrl(url string) bool {
 		},
 	}
 	res, err := client.Get(url)
-	if err != nil {
-		blackUrl := urlReg.FindString(url[:len(url)-1])
-		_ = service.InsertBlacklistRecord(blackUrl, false)
-		return false
-	}
-	loc := res.Header.Get("Location")
-	if url != loc {
-		blackUrl := urlReg.FindString(url[:len(url)-1])
-		_ = service.InsertBlacklistRecord(blackUrl, false)
-		blackUrl = urlReg.FindString(loc[:len(loc)-1])
+	if err != nil || res.StatusCode != 200 {
+		blackUrl := urlReg.FindString(url)
 		_ = service.InsertBlacklistRecord(blackUrl, false)
 		return false
 	}

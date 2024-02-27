@@ -54,7 +54,10 @@
         <div class="input-group mb-3">
             <input type="text" id="url" class="form-control" placeholder="e.g. https://example.com"
                    aria-label="Original URL" aria-describedby="btn-generate">
-            <button class="btn btn-primary" type="button" id="btn-generate" disabled>Generate</button>
+            <button class="btn btn-primary" type="button" id="btn-generate" disabled>
+                <span id="btn-loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none"></span>
+                <span>Generate</span>
+            </button>
         </div>
         <div class="mb-3">
             <div class="h-captcha" data-sitekey="{{ siteKey }}" id="captcha" data-callback="dataCallback"></div>

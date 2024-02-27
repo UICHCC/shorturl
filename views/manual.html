@@ -60,7 +60,10 @@
             <input type="text" id="code" class="form-control" placeholder="Invitation Code" required>
         </div>
         <div class="mb-3">
-            <button type="button" class="btn btn-primary form-control" id="btn-save" disabled>Save</button>
+            <button type="button" class="btn btn-primary form-control" id="btn-save" disabled>
+                <span id="btn-loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none"></span>
+                <span>Save</span>
+            </button>
         </div>
         <br/>
         <p class="mt-5 mb-3 text-muted">&copy; {{ year }} UICHCC. All rights reserved.</p>

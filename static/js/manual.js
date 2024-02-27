@@ -22,7 +22,8 @@ $(document).ready(function(){
             );
             return;
         }
-
+        $("#btn-loading").css("display", "inline-grid");
+        $("#btn-save").attr("disabled", true);
         let formData = new FormData();
         formData.append('short', $("#shorturl").val());
         formData.append('origin', btoa($("#url").val()));
@@ -34,6 +35,10 @@ $(document).ready(function(){
             processData: false,
             contentType: false,
             success:function(data){
+                $("#btn-loading").css("display", "none");
+                $("#code").val("");
+                $("#url").val("");
+                $("#shorturl").val("");
                 Swal.fire(
                     'Congratulations!',
                     data.message,
@@ -41,6 +46,7 @@ $(document).ready(function(){
                 )
             },
             error: function (err) {
+                $("#btn-loading").css("display", "none");
                 Swal.fire(
                     'Oops',
                     err.responseJSON.message,
