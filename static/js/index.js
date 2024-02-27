@@ -40,6 +40,7 @@ $(document).ready(function(){
                 reload = true;
                 $("#btn-generate").html("Reload").attr("disabled", false);
                 $("#btn-loading").css("display", "none");
+                $("#url").attr("disabled", true);
                 if (data.code === 200) {
                     $("#shorturl").val(data.url);
                     $("#btn-copy").attr("disabled", false);
@@ -58,6 +59,7 @@ $(document).ready(function(){
                 reload = true;
                 $("#btn-generate").html("Reload").attr("disabled", false);
                 $("#btn-loading").css("display", "none");
+                $("#url").attr("disabled", true);
                 Swal.fire(
                     'Oops',
                     err.responseJSON.message,
