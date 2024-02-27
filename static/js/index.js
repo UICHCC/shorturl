@@ -55,6 +55,9 @@ $(document).ready(function(){
                 }
             },
             error: function (err) {
+                reload = true;
+                $("#btn-generate").html("Reload").attr("disabled", false);
+                $("#btn-loading").css("display", "none");
                 Swal.fire(
                     'Oops',
                     err.responseJSON.message,
