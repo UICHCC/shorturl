@@ -10,8 +10,8 @@ RUN GOARCH=amd64 GOOS=linux go build
 
 FROM alpine
 
-COPY --from=builder /app/shorturl-go /app
 WORKDIR /app
+COPY --from=builder /app/shorturl-go /app
 
 CMD ["./shorturl-go"]
 EXPOSE 3000
