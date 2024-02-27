@@ -10,8 +10,10 @@ RUN GOARCH=amd64 GOOS=linux go build
 
 FROM alpine
 
+COPY --from=builder /app/ /app
 WORKDIR /app
-COPY --from=builder /app/shorturl-go /app
+RUN rm -rf controller model service util .gitignore main.go go.* *.md *.sh Dockerfile
+
 
 CMD ["./shorturl-go"]
 EXPOSE 3000
