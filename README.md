@@ -1,5 +1,6 @@
 # ShortURL
 
+<a href="https://app.circleci.com/pipelines/github/UICHCC/shorturl"><img alt="CircleCI" src="https://img.shields.io/circleci/build/github/UICHCC/shorturl?logo=circleci"></a>
 <a href="https://uich.cc"><img alt="Uptime Robot ratio (7 days)" src="https://img.shields.io/uptimerobot/ratio/7/m787678797-d17e32f3520e4c4b32dc820a"></a>
 <a href="https://uich.cc"><img alt="Uptime Robot status" src="https://img.shields.io/uptimerobot/status/m787678797-d17e32f3520e4c4b32dc820a"></a>
 
