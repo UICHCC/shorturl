@@ -62,7 +62,7 @@ func ValidateTotp(code string) bool {
 func ValidateUrl(url string) bool {
 	valid := true
 	// Check url from blacklist
-	blacklist, _ := service.GetBlacklist()
+	blacklist, _ := service.GetBlacklist(false)
 	for _, record := range blacklist {
 		reg := regexp.MustCompile(record.Pattern)
 		if reg.MatchString(url) {

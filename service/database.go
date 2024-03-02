@@ -104,13 +104,15 @@ func GetMenu(isHeader bool) ([]model.Menu, error) {
 	return menuList, nil
 }
 
-func GetBlacklist() ([]model.Blacklist, error) {
+func GetBlacklist(refresh bool) ([]model.Blacklist, error) {
 	var blacklist []model.Blacklist
-	blacklistBytes, err := GetKey(BLACKLIST_KEY).Bytes()
-	if err == nil {
-		err = json.Unmarshal(blacklistBytes, &blacklist)
+	if !refresh {
+		blacklistBytes, err := GetKey(BLACKLIST_KEY).Bytes()
 		if err == nil {
-			return blacklist, nil
+			err = json.Unmarshal(blacklistBytes, &blacklist)
+			if err == nil {
+				return blacklist, nil
+			}
 		}
 	}
 
@@ -124,7 +126,7 @@ func GetBlacklist() ([]model.Blacklist, error) {
 	if result.Error != nil {
 		return nil, result.Error
 	}
-	blacklistBytes, err = json.Marshal(blacklist)
+	blacklistBytes, err := json.Marshal(blacklist)
 	if err == nil {
 		_ = SetKey(BLACKLIST_KEY, blacklistBytes, SHORT_EXPIRE)
 	}
@@ -154,7 +156,7 @@ func InsertBlacklistRecord(pattern string, manual bool) error {
 		if result.Error != nil {
 			return result.Error
 		}
-		_, err = GetBlacklist()
+		_, err = GetBlacklist(true)
 		return err
 	}
 	return result.Error
