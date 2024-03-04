@@ -65,7 +65,7 @@ func ValidateUrl(url string) bool {
 	blacklist, _ := service.GetBlacklist(false)
 	for _, record := range blacklist {
 		reg := regexp.MustCompile(record.Pattern)
-		if reg.MatchString(url) {
+		if reg.MatchString(strings.ToLower(url)) {
 			log.Println(reg.FindString(url), record.Pattern)
 			valid = false
 			return valid
