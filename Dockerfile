@@ -12,7 +12,7 @@ FROM alpine
 
 COPY --from=builder /app/ /app
 WORKDIR /app
-RUN rm -rf controller model service util .gitignore main.go go.* *.md *.sh Dockerfile
+RUN rm -rf controller model service util .gitignore main.go go.* *.md *.sh Dockerfile LICENSE .circleci .git
 
 
 CMD ["./shorturl-go"]
