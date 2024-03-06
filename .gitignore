@@ -7,3 +7,4 @@ shorturl-go
 *.tar*
 *_test.go
 config.json
+*.txt

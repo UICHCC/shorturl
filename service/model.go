@@ -52,4 +52,5 @@ type Config struct {
 	Otp          OTP      `json:"otp"`          // Information on otp settings
 	Redis        Address  `json:"redis"`        // Host and port of redis server
 	Blacklist    []string `json:"blacklist"`    // Rules on filtering urls
+	BlacklistUrl string   `json:"blacklistUrl"` // Url of blacklist
 }

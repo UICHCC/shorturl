@@ -15,3 +15,7 @@ func GetServerInfo() Address {
 func GetOtpInfo() OTP {
 	return cfg.Otp
 }
+
+func GetBlacklistUrl() string {
+	return cfg.BlacklistUrl
+}
