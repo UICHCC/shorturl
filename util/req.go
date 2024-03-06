@@ -107,7 +107,7 @@ func parseBlockRules() ([]string, error) {
 		return listCached, err
 	}
 
-	// Get Result
+	// Fetch rule set
 	url := service.GetBlacklistUrl()
 	res, err := http.Get(url)
 	if err != nil {
@@ -128,14 +128,17 @@ func parseBlockRules() ([]string, error) {
 	regDoc := regexp.MustCompile(`\^?\$doc`)
 	regBan := regexp.MustCompile(`^!`)
 	regStart := regexp.MustCompile(`^\|\|`)
+	regSimple := regexp.MustCompile(`^\|\|[a-z0-9A-Z./*]+\^$`)
 	for _, result := range results {
 		var s string
 		var end int
 		const START_INDEX = 2
+		const START_INDEX_REG = 1
 		fsm := regMain.FindString(result)
 		fsx := regEx.FindString(result)
 		fsd := regDoc.FindString(result)
 		fsb := regBan.FindString(result)
+		fss := regSimple.FindString(result)
 		if len(fsb) > 0 {
 			continue
 		}
@@ -147,6 +150,9 @@ func parseBlockRules() ([]string, error) {
 				end = len(s)
 			}
 			rules = append(rules, s[START_INDEX:end])
+		} else if len(fss) > 0 {
+			end = len(fss) - 1
+			rules = append(rules, fss[START_INDEX:end])
 		} else if len(fsx) > 0 {
 			s = strings.Split(result, `/$doc`)[0]
 			if strings.Contains(s, "?=") {
@@ -155,18 +161,18 @@ func parseBlockRules() ([]string, error) {
 			if strings.Contains(s, "||") {
 				s = strings.ReplaceAll(s, "||", "")
 			}
-			rules = append(rules, s[1:])
+			rules = append(rules, s[START_INDEX_REG:])
 		} else if len(fsd) > 0 {
 			s = strings.Split(result, "$")[0]
 			start := 0
-			// Handling special case
+			// Handle special cases
 			if strings.Contains(s, "?") {
 				s = strings.ReplaceAll(s, "?", `\?`)
 			}
 			if s[:1] == "*" {
 				start = 1
 			}
-			// Final check
+			// Check tail of pattern
 			if regEnd.MatchString(s) {
 				end = len(s) - 1
 			} else {
