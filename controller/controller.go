@@ -81,10 +81,6 @@ func Generate(c *fiber.Ctx) error {
 		c.Status(http.StatusInternalServerError)
 		return c.JSON(fiber.Map{"message": "Invalid URL"})
 	}
-	if !util.ValidateUrl(longUrl) {
-		c.Status(http.StatusInternalServerError)
-		return c.JSON(fiber.Map{"message": "Failed to pass URL check."})
-	}
 
 	// 验证hCaptcha
 	skip := false // 是否跳过验证
@@ -96,6 +92,10 @@ func Generate(c *fiber.Ctx) error {
 		}
 	}
 	if !skip {
+		if !util.ValidateUrl(longUrl) {
+			c.Status(http.StatusInternalServerError)
+			return c.JSON(fiber.Map{"message": "Failed to pass URL check."})
+		}
 		err := util.VerifyCode(gr.Token)
 		if err != nil {
 			log.Println(err)
